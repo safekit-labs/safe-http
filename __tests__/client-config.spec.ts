@@ -13,7 +13,7 @@ describe("HTTP Client Config Options", () => {
     mockFetch.mockReset();
   });
 
-  const testRoute: HttpRouteDefinition = {
+  const testRoute = {
     path: "/test",
     method: "get",
     responses: {
@@ -24,7 +24,7 @@ describe("HTTP Client Config Options", () => {
         }),
       },
     },
-  };
+  } as const satisfies HttpRouteDefinition;
 
   it("should accept baseUrl, headers, and fetch as config options", async () => {
     const customFetch = vi.fn().mockResolvedValue(
@@ -183,7 +183,7 @@ describe("HTTP Client Config Options", () => {
   });
 
   it("should handle POST request with custom headers and fetch", async () => {
-    const postRoute: HttpRouteDefinition = {
+    const postRoute = {
       path: "/users",
       method: "post",
       request: {
@@ -202,7 +202,7 @@ describe("HTTP Client Config Options", () => {
           }),
         },
       },
-    };
+    } as const satisfies HttpRouteDefinition;
 
     const customFetch = vi.fn().mockResolvedValue(
       new Response(

@@ -27,7 +27,7 @@ describe("Superstruct Validation", () => {
   });
 
   it("should validate params with Superstruct schema", async () => {
-    const route: HttpRouteDefinition = {
+    const route = {
       path: "/users/:id",
       method: "get",
       request: {
@@ -38,7 +38,7 @@ describe("Superstruct Validation", () => {
       responses: {
         [HTTP_STATUS_CODE.OK]: { description: "Success" },
       },
-    };
+    } as const satisfies HttpRouteDefinition;
 
     const client = httpClient({ getUser: route });
 
@@ -54,7 +54,7 @@ describe("Superstruct Validation", () => {
   });
 
   it("should validate query with Superstruct schema", async () => {
-    const route: HttpRouteDefinition = {
+    const route = {
       path: "/users",
       method: "get",
       request: {
@@ -67,7 +67,7 @@ describe("Superstruct Validation", () => {
       responses: {
         [HTTP_STATUS_CODE.OK]: { description: "Success" },
       },
-    };
+    } as const satisfies HttpRouteDefinition;
 
     const client = httpClient({ getUsers: route });
 
@@ -83,7 +83,7 @@ describe("Superstruct Validation", () => {
   });
 
   it("should validate body with Superstruct schema", async () => {
-    const route: HttpRouteDefinition = {
+    const route = {
       path: "/users",
       method: "post",
       request: {
@@ -96,7 +96,7 @@ describe("Superstruct Validation", () => {
       responses: {
         [HTTP_STATUS_CODE.CREATED]: { description: "Created" },
       },
-    };
+    } as const satisfies HttpRouteDefinition;
 
     const client = httpClient({ createUser: route });
 

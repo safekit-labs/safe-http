@@ -14,7 +14,7 @@ describe("HTTP Client", () => {
   });
 
   describe("basic functionality", () => {
-    const simpleRoute: HttpRouteDefinition = {
+    const simpleRoute = {
       path: "/users/:id",
       method: "get",
       request: {
@@ -31,7 +31,7 @@ describe("HTTP Client", () => {
           }),
         },
       },
-    };
+    } as const satisfies HttpRouteDefinition;
 
     it("should create a client with a single route", () => {
       const client = httpClient({ getUser: simpleRoute });
@@ -60,7 +60,7 @@ describe("HTTP Client", () => {
     });
 
     it("should handle query parameters", async () => {
-      const routeWithQuery: HttpRouteDefinition = {
+      const routeWithQuery = {
         path: "/users",
         method: "get",
         request: {
@@ -74,7 +74,7 @@ describe("HTTP Client", () => {
             description: "Users list",
           },
         },
-      };
+      } as const satisfies HttpRouteDefinition;
 
       mockFetch.mockResolvedValue(new Response("[]", { status: 200 }));
 
@@ -89,7 +89,7 @@ describe("HTTP Client", () => {
     });
 
     it("should handle POST requests with body", async () => {
-      const createRoute: HttpRouteDefinition = {
+      const createRoute = {
         path: "/users",
         method: "post",
         request: {
@@ -108,7 +108,7 @@ describe("HTTP Client", () => {
             }),
           },
         },
-      };
+      } as const satisfies HttpRouteDefinition;
 
       mockFetch.mockResolvedValue(
         new Response(JSON.stringify({ id: "123", name: "John", email: "john@example.com" }), {
@@ -135,7 +135,7 @@ describe("HTTP Client", () => {
   });
 
   describe("nested routes", () => {
-    const getUserRoute: HttpRouteDefinition = {
+    const getUserRoute = {
       path: "/users/:id",
       method: "get",
       request: {
@@ -144,9 +144,9 @@ describe("HTTP Client", () => {
       responses: {
         [HTTP_STATUS_CODE.OK]: { description: "User found" },
       },
-    };
+    } as const satisfies HttpRouteDefinition;
 
-    const createUserRoute: HttpRouteDefinition = {
+    const createUserRoute = {
       path: "/users",
       method: "post",
       request: {
@@ -155,7 +155,7 @@ describe("HTTP Client", () => {
       responses: {
         [HTTP_STATUS_CODE.CREATED]: { description: "User created" },
       },
-    };
+    } as const satisfies HttpRouteDefinition;
 
     const userRoutes = {
       get: getUserRoute,
@@ -185,7 +185,7 @@ describe("HTTP Client", () => {
 
   describe("error handling", () => {
     it("should handle validation errors", async () => {
-      const route: HttpRouteDefinition = {
+      const route = {
         path: "/users",
         method: "post",
         request: {
@@ -197,7 +197,7 @@ describe("HTTP Client", () => {
         responses: {
           [HTTP_STATUS_CODE.CREATED]: { description: "User created" },
         },
-      };
+      } as const satisfies HttpRouteDefinition;
 
       const client = httpClient({ createUser: route });
 
@@ -209,13 +209,13 @@ describe("HTTP Client", () => {
     it("should handle network errors", async () => {
       mockFetch.mockRejectedValue(new Error("Network error"));
 
-      const route: HttpRouteDefinition = {
+      const route = {
         path: "/users",
         method: "get",
         responses: {
           [HTTP_STATUS_CODE.OK]: { description: "Users found" },
         },
-      };
+      } as const satisfies HttpRouteDefinition;
 
       const client = httpClient({ getUsers: route });
 

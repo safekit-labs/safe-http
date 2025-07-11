@@ -14,7 +14,7 @@ describe("Zod v3 Validation", () => {
   });
 
   it("should validate params with Zod v3 schema", async () => {
-    const route: HttpRouteDefinition = {
+    const route = {
       path: "/users/:id",
       method: "get",
       request: {
@@ -25,7 +25,7 @@ describe("Zod v3 Validation", () => {
       responses: {
         [HTTP_STATUS_CODE.OK]: { description: "Success" },
       },
-    };
+    } as const satisfies HttpRouteDefinition;
 
     const client = httpClient({ getUser: route });
 
@@ -41,7 +41,7 @@ describe("Zod v3 Validation", () => {
   });
 
   it("should validate query with Zod v3 schema", async () => {
-    const route: HttpRouteDefinition = {
+    const route = {
       path: "/users",
       method: "get",
       request: {
@@ -54,7 +54,7 @@ describe("Zod v3 Validation", () => {
       responses: {
         [HTTP_STATUS_CODE.OK]: { description: "Success" },
       },
-    };
+    } as const satisfies HttpRouteDefinition;
 
     const client = httpClient({ getUsers: route });
 
@@ -70,7 +70,7 @@ describe("Zod v3 Validation", () => {
   });
 
   it("should validate body with Zod v3 schema", async () => {
-    const route: HttpRouteDefinition = {
+    const route = {
       path: "/users",
       method: "post",
       request: {
@@ -83,7 +83,7 @@ describe("Zod v3 Validation", () => {
       responses: {
         [HTTP_STATUS_CODE.CREATED]: { description: "Created" },
       },
-    };
+    } as const satisfies HttpRouteDefinition;
 
     const client = httpClient({ createUser: route });
 

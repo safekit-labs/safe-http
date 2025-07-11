@@ -3,7 +3,7 @@ import { httpClient, HttpRouteDefinition, HTTP_STATUS_CODE } from "../src";
 import type { HttpClient, RouteMap, ClientConfig } from "../src";
 
 // Example route definitions
-export const getUserRoute: HttpRouteDefinition = {
+export const getUserRoute = {
   path: "/users/:id",
   method: "get",
   request: {
@@ -21,9 +21,9 @@ export const getUserRoute: HttpRouteDefinition = {
       }),
     },
   },
-} as const;
+} as const satisfies HttpRouteDefinition;
 
-export const createUserRoute: HttpRouteDefinition = {
+export const createUserRoute = {
   path: "/users",
   method: "post",
   request: {
@@ -42,7 +42,7 @@ export const createUserRoute: HttpRouteDefinition = {
       }),
     },
   },
-} as const;
+} as const satisfies HttpRouteDefinition;
 
 // Route map definition
 export const apiKeyRoutesMap = {

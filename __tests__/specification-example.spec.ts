@@ -22,7 +22,7 @@ describe("Specification Example", () => {
       traceId: z.string().optional(),
     });
 
-    const createApiKeyHttpRoute: HttpRouteDefinition = {
+    const createApiKeyHttpRoute = {
       path: "/organizations/:organizationId/api-keys",
       method: "post",
       tags: ["api-key"],
@@ -62,9 +62,9 @@ describe("Specification Example", () => {
           schema: apiErrorResponseSchema,
         },
       },
-    } as const;
+    } as const satisfies HttpRouteDefinition;
 
-    const getApiKeyHttpRoute: HttpRouteDefinition = {
+    const getApiKeyHttpRoute = {
       path: "/organizations/:organizationId/api-keys/:apiKeyId",
       method: "get",
       tags: ["api-key"],
@@ -105,7 +105,7 @@ describe("Specification Example", () => {
           schema: apiErrorResponseSchema,
         },
       },
-    } as const;
+    } as const satisfies HttpRouteDefinition;
 
     it("should work with flat SDK implementation", async () => {
       const flatSdk = httpClient({

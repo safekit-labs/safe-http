@@ -14,7 +14,7 @@ describe("Yup Validation", () => {
   });
 
   it("should validate params with Yup schema", async () => {
-    const route: HttpRouteDefinition = {
+    const route = {
       path: "/users/:id",
       method: "get",
       request: {
@@ -25,7 +25,7 @@ describe("Yup Validation", () => {
       responses: {
         [HTTP_STATUS_CODE.OK]: { description: "Success" },
       },
-    };
+    } as const satisfies HttpRouteDefinition;
 
     const client = httpClient({ getUser: route });
 
@@ -41,7 +41,7 @@ describe("Yup Validation", () => {
   });
 
   it("should validate query with Yup schema", async () => {
-    const route: HttpRouteDefinition = {
+    const route = {
       path: "/users",
       method: "get",
       request: {
@@ -54,7 +54,7 @@ describe("Yup Validation", () => {
       responses: {
         [HTTP_STATUS_CODE.OK]: { description: "Success" },
       },
-    };
+    } as const satisfies HttpRouteDefinition;
 
     const client = httpClient({ getUsers: route });
 
@@ -70,7 +70,7 @@ describe("Yup Validation", () => {
   });
 
   it("should validate body with Yup schema", async () => {
-    const route: HttpRouteDefinition = {
+    const route = {
       path: "/users",
       method: "post",
       request: {
@@ -83,7 +83,7 @@ describe("Yup Validation", () => {
       responses: {
         [HTTP_STATUS_CODE.CREATED]: { description: "Created" },
       },
-    };
+    } as const satisfies HttpRouteDefinition;
 
     const client = httpClient({ createUser: route });
 

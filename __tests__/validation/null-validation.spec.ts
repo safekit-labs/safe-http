@@ -13,7 +13,7 @@ describe("Null Validation (Skip Validation)", () => {
   });
 
   it("should skip params validation with null", async () => {
-    const route: HttpRouteDefinition = {
+    const route = {
       path: "/users/:id",
       method: "get",
       request: {
@@ -22,7 +22,7 @@ describe("Null Validation (Skip Validation)", () => {
       responses: {
         [HTTP_STATUS_CODE.OK]: { description: "Success" },
       },
-    };
+    } as const satisfies HttpRouteDefinition;
 
     const client = httpClient({ getUser: route });
 
@@ -41,7 +41,7 @@ describe("Null Validation (Skip Validation)", () => {
   });
 
   it("should skip query validation with null", async () => {
-    const route: HttpRouteDefinition = {
+    const route = {
       path: "/search",
       method: "get",
       request: {
@@ -50,7 +50,7 @@ describe("Null Validation (Skip Validation)", () => {
       responses: {
         [HTTP_STATUS_CODE.OK]: { description: "Success" },
       },
-    };
+    } as const satisfies HttpRouteDefinition;
 
     const client = httpClient({ search: route });
 
@@ -65,7 +65,7 @@ describe("Null Validation (Skip Validation)", () => {
   });
 
   it("should skip body validation with null", async () => {
-    const route: HttpRouteDefinition = {
+    const route = {
       path: "/data",
       method: "post",
       request: {
@@ -74,7 +74,7 @@ describe("Null Validation (Skip Validation)", () => {
       responses: {
         [HTTP_STATUS_CODE.OK]: { description: "Success" },
       },
-    };
+    } as const satisfies HttpRouteDefinition;
 
     const client = httpClient({ postData: route });
 

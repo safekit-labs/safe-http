@@ -16,7 +16,7 @@ describe("Validation", () => {
 
   describe("request validation", () => {
     it("should validate params with Zod schema", async () => {
-      const route: HttpRouteDefinition = {
+      const route = {
         path: "/users/:id",
         method: "get",
         request: {
@@ -27,7 +27,7 @@ describe("Validation", () => {
         responses: {
           [HTTP_STATUS_CODE.OK]: { description: "User found" },
         },
-      };
+      } as const satisfies HttpRouteDefinition;
 
       const client = httpClient({ getUser: route });
 
@@ -43,7 +43,7 @@ describe("Validation", () => {
     });
 
     it("should validate query parameters", async () => {
-      const route: HttpRouteDefinition = {
+      const route = {
         path: "/users",
         method: "get",
         request: {
@@ -56,7 +56,7 @@ describe("Validation", () => {
         responses: {
           [HTTP_STATUS_CODE.OK]: { description: "Users found" },
         },
-      };
+      } as const satisfies HttpRouteDefinition;
 
       const client = httpClient({ getUsers: route });
 
@@ -77,7 +77,7 @@ describe("Validation", () => {
     });
 
     it("should validate request body", async () => {
-      const route: HttpRouteDefinition = {
+      const route = {
         path: "/users",
         method: "post",
         request: {
@@ -90,7 +90,7 @@ describe("Validation", () => {
         responses: {
           [HTTP_STATUS_CODE.CREATED]: { description: "User created" },
         },
-      };
+      } as const satisfies HttpRouteDefinition;
 
       const client = httpClient({ createUser: route });
 
@@ -124,7 +124,7 @@ describe("Validation", () => {
     });
 
     it("should validate headers", async () => {
-      const route: HttpRouteDefinition = {
+      const route = {
         path: "/users",
         method: "get",
         request: {
@@ -136,7 +136,7 @@ describe("Validation", () => {
         responses: {
           [HTTP_STATUS_CODE.OK]: { description: "Users found" },
         },
-      };
+      } as const satisfies HttpRouteDefinition;
 
       const client = httpClient({ getUsers: route });
 
@@ -149,6 +149,7 @@ describe("Validation", () => {
 
       // Missing required header should throw
       await expect(
+        // @ts-expect-error Testing runtime validation with intentionally invalid types
         client.getUsers({ headers: { "x-version": "1.0" } })
       ).rejects.toThrow();
 
@@ -163,7 +164,7 @@ describe("Validation", () => {
     it("should handle response validation (warning on failure)", async () => {
       const consoleSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
       
-      const route: HttpRouteDefinition = {
+      const route = {
         path: "/users/:id",
         method: "get",
         responses: {
@@ -176,7 +177,7 @@ describe("Validation", () => {
             }),
           },
         },
-      };
+      } as const satisfies HttpRouteDefinition;
 
       // Mock response with invalid email
       mockFetch.mockResolvedValue(
@@ -197,7 +198,7 @@ describe("Validation", () => {
     });
 
     it("should handle valid response validation", async () => {
-      const route: HttpRouteDefinition = {
+      const route = {
         path: "/users/:id",
         method: "get",
         responses: {
@@ -210,7 +211,7 @@ describe("Validation", () => {
             }),
           },
         },
-      };
+      } as const satisfies HttpRouteDefinition;
 
       // Mock response with valid data
       mockFetch.mockResolvedValue(
@@ -237,7 +238,7 @@ describe("Validation", () => {
         return input;
       };
 
-      const route: HttpRouteDefinition = {
+      const route = {
         path: "/test",
         method: "post",
         request: {
@@ -246,7 +247,7 @@ describe("Validation", () => {
         responses: {
           [HTTP_STATUS_CODE.OK]: { description: "Success" },
         },
-      };
+      } as const satisfies HttpRouteDefinition;
 
       const client = httpClient({ test: route });
 
@@ -258,7 +259,7 @@ describe("Validation", () => {
     });
 
     it("should work with null validation (skip validation)", async () => {
-      const route: HttpRouteDefinition = {
+      const route = {
         path: "/test",
         method: "post",
         request: {
@@ -267,7 +268,7 @@ describe("Validation", () => {
         responses: {
           [HTTP_STATUS_CODE.OK]: { description: "Success" },
         },
-      };
+      } as const satisfies HttpRouteDefinition;
 
       const client = httpClient({ test: route });
 

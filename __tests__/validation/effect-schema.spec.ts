@@ -25,7 +25,7 @@ describe("Effect Schema Validation", () => {
   });
 
   it("should validate params with Effect Schema", async () => {
-    const route: HttpRouteDefinition = {
+    const route = {
       path: "/users/:id",
       method: "get",
       request: {
@@ -36,7 +36,7 @@ describe("Effect Schema Validation", () => {
       responses: {
         [HTTP_STATUS_CODE.OK]: { description: "Success" },
       },
-    };
+    } as const satisfies HttpRouteDefinition;
 
     const client = httpClient({ getUser: route });
 
@@ -52,7 +52,7 @@ describe("Effect Schema Validation", () => {
   });
 
   it("should validate query with Effect Schema", async () => {
-    const route: HttpRouteDefinition = {
+    const route = {
       path: "/users",
       method: "get",
       request: {
@@ -65,7 +65,7 @@ describe("Effect Schema Validation", () => {
       responses: {
         [HTTP_STATUS_CODE.OK]: { description: "Success" },
       },
-    };
+    } as const satisfies HttpRouteDefinition;
 
     const client = httpClient({ getUsers: route });
 
@@ -81,7 +81,7 @@ describe("Effect Schema Validation", () => {
   });
 
   it("should validate body with Effect Schema", async () => {
-    const route: HttpRouteDefinition = {
+    const route = {
       path: "/users",
       method: "post",
       request: {
@@ -94,7 +94,7 @@ describe("Effect Schema Validation", () => {
       responses: {
         [HTTP_STATUS_CODE.CREATED]: { description: "Created" },
       },
-    };
+    } as const satisfies HttpRouteDefinition;
 
     const client = httpClient({ createUser: route });
 

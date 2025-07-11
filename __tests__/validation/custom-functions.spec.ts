@@ -13,7 +13,7 @@ describe("Custom Function Validation", () => {
   });
 
   it("should validate params with custom function", async () => {
-    const route: HttpRouteDefinition = {
+    const route = {
       path: "/users/:id",
       method: "get",
       request: {
@@ -27,7 +27,7 @@ describe("Custom Function Validation", () => {
       responses: {
         [HTTP_STATUS_CODE.OK]: { description: "Success" },
       },
-    };
+    } as const satisfies HttpRouteDefinition;
 
     const client = httpClient({ getUser: route });
 
@@ -43,7 +43,7 @@ describe("Custom Function Validation", () => {
   });
 
   it("should validate query with custom function", async () => {
-    const route: HttpRouteDefinition = {
+    const route = {
       path: "/search",
       method: "get",
       request: {
@@ -68,7 +68,7 @@ describe("Custom Function Validation", () => {
       responses: {
         [HTTP_STATUS_CODE.OK]: { description: "Success" },
       },
-    };
+    } as const satisfies HttpRouteDefinition;
 
     const client = httpClient({ search: route });
 
@@ -84,7 +84,7 @@ describe("Custom Function Validation", () => {
   });
 
   it("should validate body with custom function", async () => {
-    const route: HttpRouteDefinition = {
+    const route = {
       path: "/users",
       method: "post",
       request: {
@@ -113,7 +113,7 @@ describe("Custom Function Validation", () => {
       responses: {
         [HTTP_STATUS_CODE.CREATED]: { description: "Created" },
       },
-    };
+    } as const satisfies HttpRouteDefinition;
 
     const client = httpClient({ createUser: route });
 

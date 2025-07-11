@@ -25,7 +25,7 @@ export const apiErrorResponseSchema = z.object({
 
 // ------------------ CREATE ------------------
 
-export const createApiKeyHttpRoute: HttpRouteDefinition = {
+export const createApiKeyHttpRoute = {
   path: "/organizations/:organizationId/api-keys",
   method: "post",
   tags,
@@ -65,11 +65,11 @@ export const createApiKeyHttpRoute: HttpRouteDefinition = {
       schema: apiErrorResponseSchema,
     },
   },
-} as const;
+} as const satisfies HttpRouteDefinition;
 
 // ------------------ GET API KEY ------------------
 
-export const getApiKeyHttpRoute: HttpRouteDefinition = {
+export const getApiKeyHttpRoute = {
   path: "/organizations/:organizationId/api-keys/:apiKeyId",
   method: "get",
   tags,
@@ -110,11 +110,11 @@ export const getApiKeyHttpRoute: HttpRouteDefinition = {
       schema: apiErrorResponseSchema,
     },
   },
-} as const;
+} as const satisfies HttpRouteDefinition;
 
 // ------------------ STORAGE ROUTES ------------------
 
-export const uploadFileHttpRoute: HttpRouteDefinition = {
+export const uploadFileHttpRoute = {
   path: "/storage/files",
   method: "post",
   tags: ["storage"],
@@ -144,9 +144,9 @@ export const uploadFileHttpRoute: HttpRouteDefinition = {
       }),
     },
   },
-} as const;
+} as const satisfies HttpRouteDefinition;
 
-export const getFileHttpRoute: HttpRouteDefinition = {
+export const getFileHttpRoute = {
   path: "/storage/files/:fileId",
   method: "get",
   tags: ["storage"],
@@ -175,7 +175,7 @@ export const getFileHttpRoute: HttpRouteDefinition = {
       }),
     },
   },
-} as const;
+} as const satisfies HttpRouteDefinition;
 
 // ========================================================================
 // ROUTE MAPS
@@ -207,7 +207,15 @@ const flatSdk = httpClient({
 export async function flatExample() {
   await flatSdk.createApiKey({
     params: { organizationId: "123" },
-    body: { userId: "123" },
+    body: {
+      userId: "123",
+      description: "test",
+      displayName: "test",
+      environment: "test",
+      expiresAt: "test",
+      grantedPermissions: ["test"],
+      roleIds: ["test"],
+    },
   });
 
   await flatSdk.getApiKey({
@@ -238,7 +246,15 @@ const nestedSdk = httpClient({
 export async function nestedExample() {
   await nestedSdk.apiKey.create({
     params: { organizationId: "123" },
-    body: { userId: "123" },
+    body: {
+      userId: "123",
+      description: "test",
+      displayName: "test",
+      environment: "test",
+      expiresAt: "test",
+      grantedPermissions: ["test"],
+      roleIds: ["test"],
+    },
   });
 
   await nestedSdk.apiKey.get({

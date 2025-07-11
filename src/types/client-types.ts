@@ -11,27 +11,20 @@ export type ClientRequestOptions = {
   init?: RequestInit;
 };
 
-// Helper to extract schema from request definition
-type ExtractSchemaType<T, K extends string> = T extends { request: { [P in K]: infer S } }
-  ? S extends SchemaValidator<any>
-    ? InferSchemaOutput<S>
-    : never
-  : never;
 
-// Extract request parameters with proper conditional types
-export type InferRequestType<T extends HttpRouteDefinition> = {} &
-  (T extends { request: { params: any } }
-    ? { params: ExtractSchemaType<T, "params"> }
-    : {}) &
-  (T extends { request: { query: any } }
-    ? { query: ExtractSchemaType<T, "query"> }
-    : {}) &
-  (T extends { request: { body: any } }
-    ? { body: ExtractSchemaType<T, "body"> }
-    : {}) &
-  (T extends { request: { headers: any } }
-    ? { headers: ExtractSchemaType<T, "headers"> }
-    : {});
+// More precise request type inference that properly handles schema extraction
+export type InferRequestType<T extends HttpRouteDefinition> = 
+  T extends { request: infer R }
+    ? R extends Record<string, any>
+      ? {
+          [K in keyof R]: InferSchemaOutput<R[K]>
+        } extends infer Result
+        ? keyof Result extends never
+          ? {}
+          : Result
+        : {}
+      : {}
+    : {};
 
 // Helper to check if an object has any keys
 export type HasRequiredKeys<T> = keyof T extends never ? false : true;
