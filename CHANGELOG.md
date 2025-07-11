@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated all test files and examples to use the new route definition pattern
 - Improved TypeScript developer experience with more precise type checking and better IntelliSense
 - Type system now properly constrains request parameters based on Zod (and other schema library) definitions
+- Added prettier type utilities to help with type inference and validation and make output types more readable
 
 ### [0.0.3-alpha.1] - 2025-07-11
 - Updated types to allow for importing `HttpClient` and `ClientConfig` from `@safekit/safe-http` to fix types that are too deep
