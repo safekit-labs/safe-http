@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### [0.0.3-alpha.1] - 2025-07-11
+- Updated types to allow for importing `HttpClient` and `ClientConfig` from `@safekit/safe-http` to fix types that are too deep
+
 ### [0.0.2-alpha.1] - 2025-07-11
 - Enhanced `httpClient` configuration API with direct parameter support
 - Added `baseUrl` option for setting base URL for all requests

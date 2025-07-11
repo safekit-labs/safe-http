@@ -2,8 +2,8 @@
  * Client types for the SafeHTTP library
  */
 
-import type { HttpRouteDefinition } from "./types/http-route-definition";
-import type { SchemaValidator, InferSchemaOutput } from "./types/schema";
+import type { HttpRouteDefinition } from "./http-route-definition";
+import type { SchemaValidator, InferSchemaOutput } from "./schema";
 
 export type ClientRequestOptions = {
   fetch?: typeof fetch;
@@ -19,17 +19,17 @@ type ExtractSchemaType<T, K extends string> = T extends { request: { [P in K]: i
   : never;
 
 // Extract request parameters with proper conditional types
-export type InferRequestType<T extends HttpRouteDefinition> = {} & 
-  (T extends { request: { params: any } } 
+export type InferRequestType<T extends HttpRouteDefinition> = {} &
+  (T extends { request: { params: any } }
     ? { params: ExtractSchemaType<T, "params"> }
     : {}) &
-  (T extends { request: { query: any } } 
+  (T extends { request: { query: any } }
     ? { query: ExtractSchemaType<T, "query"> }
     : {}) &
-  (T extends { request: { body: any } } 
+  (T extends { request: { body: any } }
     ? { body: ExtractSchemaType<T, "body"> }
     : {}) &
-  (T extends { request: { headers: any } } 
+  (T extends { request: { headers: any } }
     ? { headers: ExtractSchemaType<T, "headers"> }
     : {});
 
@@ -52,7 +52,7 @@ export interface ClientResponse<T = unknown> extends Response {
 }
 
 // Client endpoint with proper conditional args
-export type ClientEndpoint<T extends HttpRouteDefinition> = 
+export type ClientEndpoint<T extends HttpRouteDefinition> =
   HasRequiredKeys<InferRequestType<T>> extends true
     ? (args: InferRequestType<T>, options?: ClientRequestOptions) => Promise<ClientResponse<InferResponseType<T>>>
     : (args?: InferRequestType<T>, options?: ClientRequestOptions) => Promise<ClientResponse<InferResponseType<T>>>;

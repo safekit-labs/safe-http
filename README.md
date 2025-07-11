@@ -531,6 +531,74 @@ Safe-HTTP focuses on type-safe HTTP clients and doesn't include:
 - Request caching (use external libraries)
 - File upload utilities (use standard APIs)
 
+## Troubleshooting
+
+### TypeScript Error: "The inferred type cannot be named without a reference to..."
+
+When creating SDK factories or wrapper functions, you might encounter this TypeScript error:
+
+```
+The inferred type of 'createMyApiSdk' cannot be named without a reference to 
+'../../node_modules/@safekit/safe-http/dist/src/client-types'. This is likely not portable.
+```
+
+**Problem:**
+```typescript
+// ❌ This causes the error
+export const createMyApiSdk = (config?: ClientConfig) => {
+  return httpClient(myRoutes, config);
+};
+
+// ❌ This fails
+export type MyApiSdk = ReturnType<typeof createMyApiSdk>;
+```
+
+**Solution:**
+Add an explicit return type annotation to your function:
+
+```typescript
+import { httpClient, HttpClient, ClientConfig } from "@safekit/safe-http";
+
+// ✅ Add explicit return type
+export const createMyApiSdk = (config?: ClientConfig): HttpClient<typeof myRoutes> => {
+  return httpClient(myRoutes, config);
+};
+
+// ✅ Now this works
+export type MyApiSdk = ReturnType<typeof createMyApiSdk>;
+
+// ✅ Alternative: Export the type directly
+export type MyApiSdkDirect = HttpClient<typeof myRoutes>;
+```
+
+**Why this happens:**
+The TypeScript compiler can't generate a portable type definition for complex inferred types that reference deep internal module paths. Adding an explicit return type annotation solves this by providing a stable, exportable type reference.
+
+**Additional Solutions:**
+
+```typescript
+// Option 1: Generic factory function
+export function createTypedSdk<T extends RouteMap>(
+  routes: T, 
+  config?: ClientConfig
+): HttpClient<T> {
+  return httpClient(routes, config);
+}
+
+// Option 2: Class wrapper (for complex scenarios)
+export class MyApiSdk {
+  private client: HttpClient<typeof myRoutes>;
+  
+  constructor(config?: ClientConfig) {
+    this.client = httpClient(myRoutes, config);
+  }
+  
+  get api() {
+    return this.client;
+  }
+}
+```
+
 ## Inspiration
 
 This library draws inspiration from:
