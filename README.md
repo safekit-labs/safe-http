@@ -70,55 +70,6 @@ const user = await api.getUser({
 // user is automatically typed as { id: string, name: string, email: string }
 ```
 
-## Schema Support
-
-Safe-HTTP supports multiple validation libraries through a unified interface:
-
-```typescript
-import { z } from "zod";
-import * as yup from "yup";
-import * as v from "valibot";
-
-// Zod
-const zodRoute = {
-  path: "/users",
-  method: "post" as const,
-  request: {
-    body: z.object({
-      name: z.string(),
-      age: z.number().min(0),
-    }),
-  },
-  responses: { 201: { description: "Created" } },
-};
-
-// Yup
-const yupRoute = {
-  path: "/users",
-  method: "post" as const,
-  request: {
-    body: yup.object({
-      name: yup.string().required(),
-      age: yup.number().min(0).required(),
-    }),
-  },
-  responses: { 201: { description: "Created" } },
-};
-
-// Valibot
-const valibotRoute = {
-  path: "/users",
-  method: "post" as const,
-  request: {
-    body: v.object({
-      name: v.string(),
-      age: v.pipe(v.number(), v.minValue(0)),
-    }),
-  },
-  responses: { 201: { description: "Created" } },
-};
-```
-
 ## Route Definitions
 
 Define HTTP routes with full type safety:
@@ -142,9 +93,11 @@ const createUserRoute: HttpRouteDefinition = {
       email: z.string().email(),
       age: z.number().min(0).max(150),
     }),
-    headers: z.object({
-      "x-api-key": z.string(),
-    }).optional(),
+    headers: z
+      .object({
+        "x-api-key": z.string(),
+      })
+      .optional(),
   },
   responses: {
     [HTTP_STATUS_CODE.CREATED]: {
@@ -224,19 +177,23 @@ const route = {
     headers: z.object({
       authorization: z.string(),
     }),
-    body: z.object({
-      filters: z.array(z.string()),
-    }).optional(),
+    body: z
+      .object({
+        filters: z.array(z.string()),
+      })
+      .optional(),
   },
   responses: {
     200: {
       description: "Posts retrieved",
       schema: z.object({
-        posts: z.array(z.object({
-          id: z.string(),
-          title: z.string(),
-          content: z.string(),
-        })),
+        posts: z.array(
+          z.object({
+            id: z.string(),
+            title: z.string(),
+            content: z.string(),
+          }),
+        ),
         pagination: z.object({
           page: z.number(),
           limit: z.number(),
@@ -281,12 +238,12 @@ const api = httpClient({
 
 // ✅ Valid request
 await api.createUser({
-  body: { email: "user@example.com", age: 25 }
+  body: { email: "user@example.com", age: 25 },
 });
 
 // ❌ Throws validation error
 await api.createUser({
-  body: { email: "invalid-email", age: -5 }
+  body: { email: "invalid-email", age: -5 },
 });
 ```
 
@@ -383,9 +340,11 @@ const route = {
 Creates a type-safe HTTP client from route definitions.
 
 **Parameters:**
+
 - `routes` - Object containing route definitions (flat or nested)
 
 **Returns:**
+
 - HTTP client with methods corresponding to route keys
 
 ### `HttpRouteDefinition`
@@ -408,9 +367,59 @@ interface HttpRouteDefinition {
 }
 ```
 
+## Schema Support
+
+Safe-HTTP supports multiple validation libraries through a unified interface:
+
+```typescript
+import { z } from "zod";
+import * as yup from "yup";
+import * as v from "valibot";
+
+// Zod
+const zodRoute = {
+  path: "/users",
+  method: "post" as const,
+  request: {
+    body: z.object({
+      name: z.string(),
+      age: z.number().min(0),
+    }),
+  },
+  responses: { 201: { description: "Created" } },
+};
+
+// Yup
+const yupRoute = {
+  path: "/users",
+  method: "post" as const,
+  request: {
+    body: yup.object({
+      name: yup.string().required(),
+      age: yup.number().min(0).required(),
+    }),
+  },
+  responses: { 201: { description: "Created" } },
+};
+
+// Valibot
+const valibotRoute = {
+  path: "/users",
+  method: "post" as const,
+  request: {
+    body: v.object({
+      name: v.string(),
+      age: v.pipe(v.number(), v.minValue(0)),
+    }),
+  },
+  responses: { 201: { description: "Created" } },
+};
+```
+
 ### `SchemaValidator<T>`
 
 Union type supporting multiple validation libraries:
+
 - Zod: `{ parse: (input: unknown) => T }`
 - Yup: `{ validateSync: (input: unknown) => T }`
 - Superstruct: `{ create: (input: unknown) => T }`
@@ -420,6 +429,7 @@ Union type supporting multiple validation libraries:
 ## What's Not Included
 
 Safe-HTTP focuses on type-safe HTTP clients and doesn't include:
+
 - HTTP server/framework functionality
 - Built-in authentication (bring your own)
 - Request caching (use external libraries)
@@ -428,6 +438,7 @@ Safe-HTTP focuses on type-safe HTTP clients and doesn't include:
 ## Inspiration
 
 This library draws inspiration from:
+
 - [Hono](https://github.com/honojs/hono) - Lightweight web framework
 - [tRPC](https://github.com/trpc/trpc) - End-to-end typesafe APIs
 - [Zod](https://github.com/colinhacks/zod) - TypeScript schema validation
