@@ -37,15 +37,10 @@ jobs:
       - name: Setup Node.js for npm publish
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
-          registry-url: 'https://registry.npmjs.org'
+          node-version: "18"
+          registry-url: "https://registry.npmjs.org"
 
       - name: Publish to npm
-        run: |
-          if [[ "${{ github.event.release.prerelease }}" == "true" ]]; then
-            npm publish --provenance --access public --tag alpha
-          else
-            npm publish --provenance --access public
-          fi
+        run: npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
