@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### [0.0.2-alpha.1] - 2025-07-11
+- Enhanced `httpClient` configuration API with direct parameter support
+- Added `baseUrl` option for setting base URL for all requests
+- Added `headers` option supporting static objects, functions, and async functions
+- Added `fetch` option for custom fetch implementations
+- Added support for all `RequestInit` options (mode, credentials, cache, etc.)
+- Simplified configuration interface by removing redundant `defaultOptions`
+
 ## [0.0.1-alpha.1] - 2025-07-11
 
 ### Added

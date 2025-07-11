@@ -70,9 +70,10 @@ export type InferRouteClient<T> = T extends HttpRouteDefinition
     }
   : never;
 
-export type ClientConfig = {
+export type ClientConfig = Omit<RequestInit, 'headers' | 'method' | 'body'> & {
   baseUrl?: string;
-  defaultOptions?: ClientRequestOptions;
+  headers?: ClientRequestOptions['headers'];
+  fetch?: ClientRequestOptions['fetch'];
 };
 
 export type HttpClient<T extends RouteMap> = {

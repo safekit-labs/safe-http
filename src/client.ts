@@ -216,10 +216,20 @@ function createClientFromRouteMap<T extends RouteMap>(
 
 export function httpClient<T extends RouteMap>(
   routeMap: T,
-  config: { baseUrl?: string; defaultOptions?: ClientRequestOptions } = {}
+  config: Omit<RequestInit, 'headers' | 'method' | 'body'> & {
+    baseUrl?: string;
+    headers?: ClientRequestOptions['headers'];
+    fetch?: ClientRequestOptions['fetch'];
+  } = {}
 ): HttpClient<T> {
-  const baseUrl = config.baseUrl || '';
-  const baseOptions = config.defaultOptions || {};
+  const { baseUrl = '', headers, fetch, ...requestInit } = config;
+  
+  // Build base options from config
+  const baseOptions: ClientRequestOptions = {
+    headers,
+    fetch,
+    init: requestInit,
+  };
   
   return createClientFromRouteMap(routeMap, baseUrl, baseOptions);
 }

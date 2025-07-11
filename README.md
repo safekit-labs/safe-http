@@ -11,12 +11,12 @@ A lightweight type-safe HTTP client builder with schema validation and automatic
 
 ## Features
 
-🔒 **Type-safe HTTP clients** - Automatic TypeScript inference for requests and responses
-📋 **Schema validation** - Validate requests and responses with your favorite validation library
-🎨 **Multiple schemas** - Supports Zod, Yup, Valibot, ArkType, Effect Schema, Superstruct, and more
-🔗 **Flexible organization** - Flat or nested SDK structures
-✅ **Full request/response coverage** - Validate params, query, body, headers, and responses
-🚀 **Zero runtime overhead** - Pure TypeScript types with optional runtime validation
+- 🔒 **Type-safe HTTP clients** - Automatic TypeScript inference for requests and responses
+- 📋 **Schema validation** - Validate requests and responses with your favorite validation library
+- 🎨 **Multiple schemas** - Supports Zod, Yup, Valibot, ArkType, Effect Schema, Superstruct, and more
+- 🔗 **Flexible organization** - Flat or nested SDK structures
+- ✅ **Full request/response coverage** - Validate params, query, body, headers, and responses
+- 🚀 **Zero runtime overhead** - Pure TypeScript types with optional runtime validation
 
 ## Installation
 
@@ -155,6 +155,97 @@ const api = httpClient({
 // Usage
 await api.users.get({ params: { id: "123" } });
 await api.posts.list({ query: { page: 1, limit: 10 } });
+```
+
+## Configuration Options
+
+Configure your HTTP client with common options like base URL, headers, and custom fetch:
+
+```typescript
+const api = httpClient(routes, {
+  baseUrl: "https://api.example.com",
+  headers: {
+    "X-API-Key": "your-api-key",
+    "User-Agent": "MyApp/1.0",
+  },
+});
+
+// Now all requests use the base URL and headers
+await api.getUser({ params: { id: "123" } });
+// Calls: https://api.example.com/users/123
+```
+
+### Available Configuration Options
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `baseUrl` | `string` | Base URL prepended to all request paths |
+| `headers` | `Record<string, string>` \| `Function` \| `AsyncFunction` | Default headers for all requests |
+| `fetch` | `typeof fetch` | Custom fetch implementation |
+| `mode` | `RequestMode` | CORS mode (cors, no-cors, same-origin) |
+| `credentials` | `RequestCredentials` | Include credentials (include, same-origin, omit) |
+| `cache` | `RequestCache` | Cache behavior (default, no-cache, reload, etc.) |
+| `redirect` | `RequestRedirect` | Redirect behavior (follow, error, manual) |
+| `referrerPolicy` | `ReferrerPolicy` | Referrer policy |
+| `signal` | `AbortSignal` | AbortController signal for request cancellation |
+
+### Dynamic Headers
+
+Headers can be static, functions, or async functions for dynamic values:
+
+```typescript
+// Static headers
+const api = httpClient(routes, {
+  headers: {
+    "X-API-Key": "static-key",
+  },
+});
+
+// Dynamic headers (function)
+const api = httpClient(routes, {
+  headers: () => ({
+    "Authorization": `Bearer ${getToken()}`,
+    "X-Timestamp": Date.now().toString(),
+  }),
+});
+
+// Async dynamic headers
+const api = httpClient(routes, {
+  headers: async () => ({
+    "Authorization": `Bearer ${await refreshToken()}`,
+  }),
+});
+```
+
+### Custom Fetch
+
+Use a custom fetch implementation for logging, retries, or other middleware:
+
+```typescript
+const api = httpClient(routes, {
+  fetch: async (url, init) => {
+    console.log(`Making request to: ${url}`);
+    const response = await fetch(url, init);
+    console.log(`Response status: ${response.status}`);
+    return response;
+  },
+});
+```
+
+### Complete Configuration Example
+
+```typescript
+const api = httpClient(routes, {
+  baseUrl: "https://api.example.com",
+  headers: async () => ({
+    "Authorization": `Bearer ${await getAuthToken()}`,
+    "X-Client-Version": "1.0.0",
+  }),
+  fetch: customFetchWithRetry,
+  mode: "cors",
+  credentials: "include",
+  cache: "no-cache",
+});
 ```
 
 ## Request Types
@@ -335,13 +426,18 @@ const route = {
 
 ## API Reference
 
-### `httpClient(routes)`
+### `httpClient(routes, config?)`
 
 Creates a type-safe HTTP client from route definitions.
 
 **Parameters:**
 
 - `routes` - Object containing route definitions (flat or nested)
+- `config` - Optional configuration object with the following properties:
+  - `baseUrl?: string` - Base URL for all requests
+  - `headers?: Record<string, string> | (() => Record<string, string>) | (() => Promise<Record<string, string>>)` - Default headers
+  - `fetch?: typeof fetch` - Custom fetch implementation
+  - All other `RequestInit` properties (mode, credentials, cache, etc.)
 
 **Returns:**
 
